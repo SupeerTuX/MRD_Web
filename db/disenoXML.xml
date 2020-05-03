@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Active URL: https://ondras.zarovi.cz/sql/demo/?keyword=default -->
+<sql>
+<datatypes db="mysql">
+	<group color="rgb(238,238,170)" label="Numeric">
+		<type label="Integer" quote="" sql="INTEGER" length="0"/>
+	 	<type label="TINYINT" quote="" sql="TINYINT" length="0"/>
+	 	<type label="SMALLINT" quote="" sql="SMALLINT" length="0"/>
+	 	<type label="MEDIUMINT" quote="" sql="MEDIUMINT" length="0"/>
+	 	<type label="INT" quote="" sql="INT" length="0"/>
+		<type label="BIGINT" quote="" sql="BIGINT" length="0"/>
+		<type label="Decimal" quote="" sql="DECIMAL" length="1" re="DEC"/>
+		<type label="Single precision" quote="" sql="FLOAT" length="0"/>
+		<type label="Double precision" quote="" sql="DOUBLE" length="0" re="DOUBLE"/>
+	</group>
+
+	<group color="rgb(255,200,200)" label="Character">
+		<type label="Char" quote="'" sql="CHAR" length="1"/>
+		<type label="Varchar" quote="'" sql="VARCHAR" length="1"/>
+		<type label="Text" quote="'" sql="MEDIUMTEXT" length="0" re="TEXT"/>
+		<type label="Binary" quote="'" sql="BINARY" length="1"/>
+		<type label="Varbinary" quote="'" sql="VARBINARY" length="1"/>
+		<type label="BLOB" quote="'" sql="BLOB" length="0" re="BLOB"/>
+	</group>
+
+	<group color="rgb(200,255,200)" label="Date &amp; Time">
+		<type label="Date" quote="'" sql="DATE" length="0"/>
+		<type label="Time" quote="'" sql="TIME" length="0"/>
+		<type label="Datetime" quote="'" sql="DATETIME" length="0"/>
+		<type label="Year" quote="" sql="YEAR" length="0"/>
+		<type label="Timestamp" quote="'" sql="TIMESTAMP" length="0"/>
+	</group>
+	
+	<group color="rgb(200,200,255)" label="Miscellaneous">
+		<type label="ENUM" quote="" sql="ENUM" length="1"/>
+		<type label="SET" quote="" sql="SET" length="1"/>
+		<type label="Bit" quote="" sql="bit" length="0"/>
+	</group>
+</datatypes><table x="284" y="126" name="Servicios">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="fecha" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default><comment>Fecha de realizacion de servicio</comment>
+</row>
+<row name="Direccion" null="1" autoincrement="0">
+<datatype>VARCHAR(150)</datatype>
+<default>NULL</default><comment>Direccion de recepcion de la unidad</comment>
+</row>
+<row name="MotivoInventario" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Motivo del inventario</comment>
+</row>
+<row name="VahiculoMarca" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Marca del vehiculo</comment>
+</row>
+<row name="Tipo" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Tipo de vehiculo</comment>
+</row>
+<row name="Modelo" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Modelo del vehiculo</comment>
+</row>
+<row name="Color" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Color de vehiculo</comment>
+</row>
+<row name="Placas" null="1" autoincrement="0">
+<datatype>VARCHAR(10)</datatype>
+<default>NULL</default><comment>Placas del vehiculo</comment>
+</row>
+<row name="NoSerie" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Numero de serie del vehiculo</comment>
+</row>
+<row name="NombreConductor" null="1" autoincrement="0">
+<datatype>VARCHAR(75)</datatype>
+<default>NULL</default><comment>Nombre del conductor o propietario</comment>
+</row>
+<row name="Llaves" null="1" autoincrement="0">
+<datatype>VARCHAR(10)</datatype>
+<default>NULL</default><comment>Llaves</comment>
+</row>
+<row name="Telefono" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default><comment>Telefono</comment>
+</row>
+<row name="Grua" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default><comment>Ckave de grua</comment>
+</row>
+<row name="ClaveOperador" null="1" autoincrement="0">
+<datatype>VARCHAR(50)</datatype>
+<default>NULL</default></row>
+<row name="Solicitante" null="1" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>NULL</default><comment>Autoridad o empresa solicitante</comment>
+</row>
+<row name="DefensaDelantera" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default><comment>Defensa delantera</comment>
+</row>
+<row name="CarroceriaSinGolpes" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default><comment>Carroceria sin golpes</comment>
+</row>
+<row name="Parrilla" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Faros" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Cofre" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Parabrisas" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Limpiadores" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Emblemas" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="PortezuelaIzq" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default><comment>Portezuela Izquierda</comment>
+</row>
+<row name="CristalLatIzq" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default><comment>Cristal lateral izquierdo</comment>
+</row>
+<row name="Medallon" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Cajuela" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="DefensaTrasera" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="PortezuelaDer" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="CristalLatDer" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default><comment>Cristal Lateral Derecho</comment>
+</row>
+<row name="Antenas" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Espejos" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="TaponesRuedas" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="TaponGasolina" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="SalpicaderaDer" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="SalpicaderaIzq" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Tablero" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Volante" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Radio" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="EquipoSonido" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Encendedor" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Espejo" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Asientos" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="TapetesAlfombra" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="TapetesHule" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Extintor" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="GatoYManeral" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="TrianguloDeSeguridad" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Bocinas" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Luces" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Tag" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="VialPass" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="SimCard" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Radiador" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Motoventilador" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Alternador" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="CableDeBujias" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Depurador" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Carburador" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="FiltroAire" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Inyectores" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Compresor" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Computadora" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="Bateria" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="MarcaMotor" null="1" autoincrement="0">
+<datatype>VARCHAR(15)</datatype>
+<default>NULL</default></row>
+<row name="MarcaLlantas" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default></row>
+<row name="MedidaLlantas" null="1" autoincrement="0">
+<datatype>VARCHAR(25)</datatype>
+<default>NULL</default></row>
+<row name="CantidadLlantas" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><comment>Cantidad de llantas</comment>
+</row>
+<row name="TanqueGasolina" null="1" autoincrement="0">
+<datatype>FLOAT</datatype>
+<default>NULL</default><comment>Cantidad de gasolina en el tanque</comment>
+</row>
+<row name="CargaConsistente" null="1" autoincrement="0">
+<datatype>VARCHAR(300)</datatype>
+<default>NULL</default></row>
+<row name="Observaciones" null="1" autoincrement="0">
+<datatype>VARCHAR(300)</datatype>
+<default>NULL</default></row>
+<row name="NombreEntrega" null="1" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>NULL</default><comment>Nombre de la persona que entrega el vehiculo</comment>
+</row>
+<row name="NombreDeOficial" null="1" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>NULL</default><comment>Nombre del ofician que intervino</comment>
+</row>
+<row name="NombreOperador" null="1" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>NULL</default><comment>Nombre del operador que recive el vehiculo</comment>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<comment>Contiene la informacion de los servicios realizados</comment>
+</table>
+</sql>

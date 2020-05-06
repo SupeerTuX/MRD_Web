@@ -45,11 +45,16 @@ $app->get('/api/hello/world', function (Request $request, Response $response, ar
         ->withStatus(200);
 });
 
-//Get proporciona los reportes ingresados segun la fecha proporcionada
+// *##################################################################### //
+// * http-> Get proporciona los reportes en la fecha proporcionada
+// *##################################################################### //
 $app->get('/api/reporte/{fecha}/{region}', function (Request $request, Response $response, array $args) {
 
     $region = $args['region'];
     $fecha = $args['fecha'];
+    $reportes = array(); //Variables para contener los reportes
+
+    //? Obtiene los reportes por fecha
     $sql = "SELECT * FROM $region WHERE DATE(Fecha) = :fecha";
     try {
         $db = new db();
@@ -57,9 +62,36 @@ $app->get('/api/reporte/{fecha}/{region}', function (Request $request, Response 
         $resultado = $db->prepare($sql);
         $resultado->bindParam(':fecha', $fecha);
         $resultado->execute();
-
         if ($resultado->rowCount() > 0) {
             $reportes = $resultado->fetchAll();
+            //* Reportes guardados
+            //echo count($reportes);
+
+            //echo var_dump($reportes);
+            foreach ($reportes as $i => $v) {
+                //var_dump($reportes[$i]['Folio']);
+                //var_dump($reportes[$i]);
+                //* Generamos la peticion
+                $_tabla = "folio_$region";
+                $sql = "SELECT * FROM $_tabla WHERE Folio=:folio";
+                $_folio = $reportes[$i]['Folio'];
+                try {
+                    $db = new db();
+                    $db = $db->connectDB();
+                    $resultado = $db->prepare($sql);
+                    $resultado->bindParam(':folio', $_folio);
+                    $resultado->execute();
+                    if ($resultado->rowCount() > 0) {
+                        $ticket = $resultado->fetchAll();
+                        //* Informacion del ticket
+                        $reportes[$i]['Ticket'] = $ticket;
+                    } else {
+                        //No hay reportes en esta fecha
+                    }
+                } catch (PDOException $e) {
+                }
+                //TODO continuar aqui
+            }
 
             $response->getBody()->write(json_encode($reportes));
             return $response
@@ -80,7 +112,9 @@ $app->get('/api/reporte/{fecha}/{region}', function (Request $request, Response 
     }
 });
 
-//Get proporciona los reportes entre 2 fechas
+// *##################################################################### //
+// * http-> Get proporciona los reportes entre 2 fechas 
+// *##################################################################### //
 $app->get('/api/reporte/{fecha1}/{fecha2}/{region}', function (Request $request, Response $response, array $args) {
 
     $region = $args['region'];
@@ -385,7 +419,6 @@ $app->post('/api/reporte', function (Request $request, Response $response, array
         ->withHeader('Content-Type', 'application/json')
         ->withStatus(201);
 });
-
 
 
 //Manejo de imagenes
@@ -751,6 +784,7 @@ $app->delete('/api/user', function (Request $request, Response $response, array 
         ->withStatus(201);
 });
 
+
 $app->post('/api/user/editpsw', function (Request $request, Response $response, array $args) {
     $data = verifyRequiredParams(array('user', 'pass'), $request);
     $payload = json_encode($data);
@@ -802,8 +836,28 @@ $app->post('/api/user/editpsw', function (Request $request, Response $response, 
         ->withStatus(201);
 });
 
+//TODO Crear web service post para cerrar el ticket
 
 
+
+function getTicket($reportes, $folio, $sql)
+{
+    try {
+        $db = new db();
+        $db = $db->connectDB();
+        $resultado = $db->prepare($sql);
+        $resultado->bindParam(':folio', $reportes['0']['Folio']);
+        $resultado->execute();
+        if ($resultado->rowCount() > 0) {
+            $ticket = $resultado->fetchAll();
+            //* Informacion del ticket
+            $reportes['0']['Ticket'] = $ticket;
+        } else {
+            //No hay reportes en esta fecha
+        }
+    } catch (PDOException $e) {
+    }
+}
 
 
 /**

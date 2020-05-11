@@ -63,15 +63,11 @@ $app->get('/api/reporte/{fecha}/{region}', function (Request $request, Response 
         $resultado->bindParam(':fecha', $fecha);
         $resultado->execute();
         if ($resultado->rowCount() > 0) {
+            //* Si existen reportes estan en $reportes
             $reportes = $resultado->fetchAll();
-            //* Reportes guardados
-            //echo count($reportes);
-
-            //echo var_dump($reportes);
+            //* Por cada reporte en el array agregamos la informacion del ticket
             foreach ($reportes as $i => $v) {
-                //var_dump($reportes[$i]['Folio']);
-                //var_dump($reportes[$i]);
-                //* Generamos la peticion
+                //* Generamos la peticion para la informacion del ticket
                 $_tabla = "folio_$region";
                 $sql = "SELECT * FROM $_tabla WHERE Folio=:folio";
                 $_folio = $reportes[$i]['Folio'];
@@ -131,7 +127,34 @@ $app->get('/api/reporte/{fecha1}/{fecha2}/{region}', function (Request $request,
         $resultado->execute();
 
         if ($resultado->rowCount() > 0) {
+            //*Si existen reportes se guardan en $reportes
             $reportes = $resultado->fetchAll(PDO::FETCH_ASSOC);
+            //* Por cada reporte en el array agregamos la informacion del ticket
+            foreach ($reportes as $i => $v) {
+                //* Generamos la peticion para la informacion del ticket
+                $_tabla = "folio_$region";
+                $sql = "SELECT * FROM $_tabla WHERE Folio=:folio";
+                $_folio = $reportes[$i]['Folio'];
+                try {
+                    $db = new db();
+                    $db = $db->connectDB();
+                    $resultado = $db->prepare($sql);
+                    $resultado->bindParam(':folio', $_folio);
+                    $resultado->execute();
+                    if ($resultado->rowCount() > 0) {
+                        $ticket = $resultado->fetchAll();
+                        //* Informacion del ticket
+                        $reportes[$i]['Ticket'] = $ticket;
+                    } else {
+                        //No hay reportes en esta fecha
+                    }
+                } catch (PDOException $e) {
+                    $response->getBody()->write(response(true, "Error al buscar fecha " . $e->getMessage() . $sql, 400));
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus(400);
+                }
+            }
             $response->getBody()->write(json_encode($reportes));
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -836,9 +859,142 @@ $app->post('/api/user/editpsw', function (Request $request, Response $response, 
         ->withStatus(201);
 });
 
-//TODO Crear web service post para cerrar el ticket
+
+// ?##################################################################### //
+// ? http-> Post Servicio para cerrar el ticket
+// ?##################################################################### //
+$app->post('/api/ticket/close', function (Request $request, Response $response, array $args) {
+    //* Parametrso requeridos en el JSON para procesar la solicitud
+    $data = verifyRequiredParams(array(
+        'Estado', 'FechaTicket', 'FechaArrastre', 'Folio', 'Placas', 'Marca', 'Tipo',
+        'Color', 'IFE', 'Nombre', 'Importe', 'ImporteLetra', 'Concepto', 'Region'
+    ), $request);
+    //* Codificamos en JSON la respuesta si hay algun error
+    $payload = json_encode($data);
+    //* Si verifyRequiredParams(array(), $request) devolviio error
+    //* Terminamos el proceso y devolvemos el error 
+    if ($data["error"]) {
+        $response->getBody()->write($payload);
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(400);
+    }
+    //* Obtenemos el JSON de la request
+    $body = $request->getBody();
+    //* Decodificamos el JSON en un array
+    $data = json_decode($body, true);
+    //*Tabla a actualizar
+    $tabla = "folio_" . $data['Region'];
+    //* Consulta SQL
+
+    //? Manejo de consecutivo
+    //*Si elaumento del consecutivo ha fallado regresamos el error
+    if (!aumentarConsecutivo($data)) {
+        $response->getBody()->write(response(false, "Error al incrementar el consecutivo", 400));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(400);
+    } //Continuamos
+
+    //*Leemos el consecutivo
+    $_consecutivo = leerConsecutivo($data);
+    $consecutivo = $_consecutivo['0']['0'];
+
+    if ($consecutivo == -1) {
+        $response->getBody()->write(response(false, "Error al leer el consecutivo", 400));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(400);
+    }
+
+    $sql = "UPDATE $tabla SET Consecutivo=:consecutivo, Estado=true, FechaTicket=:fechaTicket, FechaArrastre=:fechaArrastre, Placas=:placas, Marca=:marca, Tipo=:tipo, Color=:color, IFE=:ife, Nombre=:nombre, Importe=:importe, ImporteLetra=:importeLetra, Concepto=:conceptp WHERE Folio=:folio";
+    try {
+        $db = new db();
+        $db = $db->connectDB();
+        $resultado = $db->prepare($sql);
+        $resultado->bindParam(':consecutivo', $consecutivo);
+        $resultado->bindParam(':fechaTicket', $data['FechaTicket']);
+        $resultado->bindParam(':fechaArrastre', $data['FechaArrastre']);
+        $resultado->bindParam(':placas', $data['Placas']);
+        $resultado->bindParam(':marca', $data['Marca']);
+        $resultado->bindParam(':tipo', $data['Tipo']);
+        $resultado->bindParam(':color', $data['Color']);
+        $resultado->bindParam(':ife', $data['IFE']);
+        $resultado->bindParam(':nombre', $data['Nombre']);
+        $resultado->bindParam(':importe', $data['Importe']);
+        $resultado->bindParam(':importeLetra', $data['ImporteLetra']);
+        $resultado->bindParam(':conceptp', $data['Concepto']);
+        $resultado->bindParam(':folio', $data['Folio']);
+        //*Ejecutamos la consulta
+        $resultado->execute();
+        //var_dump($consecutivo);
+
+        if ($resultado->rowCount() > 0) {
+            $response->getBody()->write(response(false, $consecutivo, 201));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(201);
+        } else {
+            $response->getBody()->write(response(true, "Filas Afectadas: " . $resultado->rowCount() . ". Los nombres de archivo ya existen", 200));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(203);
+        }
+        $resultado = null;
+        $db = null;
+    } catch (PDOException $e) {
+        $response->getBody()->write(response(true, "Error al actualizar la tabla :" . $e->getMessage(), 401));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(401);
+    }
+});
 
 
+// ?##################################################################### //
+// ? Aumento del consecutivo del ticket
+// ?##################################################################### //
+function aumentarConsecutivo($data)
+{
+    $region = $data['Region'];
+    $sql = "UPDATE consecutivo SET $region=$region+1 WHERE id='1'";
+    try {
+        $db = new db();
+        $db = $db->connectDB();
+        $resultado = $db->query($sql);
+
+        if ($resultado->rowCount() > 0) {
+            //Si hay resultados
+            return 1;
+        } else {
+            return -1;
+        }
+    } catch (PDOException $e) {
+        return -1;
+    }
+}
+
+// ?##################################################################### //
+// ? Aumento del consecutivo del ticket
+// ?##################################################################### //
+function leerConsecutivo($data)
+{
+    $region = $data['Region'];
+    $sql = "SELECT $region FROM consecutivo WHERE id=1";
+    try {
+        $db = new db();
+        $db = $db->connectDB();
+        $resultado = $db->query($sql);
+        if ($resultado->rowCount() > 0) {
+            //Si hay resultados
+            return $resultado->fetchAll();
+        } else {
+            return -1;
+        }
+    } catch (PDOException $e) {
+        return -1;
+    }
+}
 
 function getTicket($reportes, $folio, $sql)
 {

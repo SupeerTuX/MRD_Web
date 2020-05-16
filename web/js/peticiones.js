@@ -4,6 +4,7 @@ var fechaActual;
 var region;
 var fechaFormat;
 var ticketData = new Object();
+var reporteActual;
 
 //var urlBase = "http://consulta.ustgm.net";
 var urlBase = "http://localhost";
@@ -119,6 +120,7 @@ function getReportByFolio(folio, region) {
         //console.log(response['error']);
         //console.log(response['msg']);
         data = response;
+        console.log(response);
 
         if (!response["error"]) {
             $("#reportes").html("<h3>Reportes encontrados</h3><br>");
@@ -141,7 +143,14 @@ function getReportByFolio(folio, region) {
     });
 }
 
+//? ############################################################
+//? FUNCTION()  LLena el resumen del reporte y la previsualizacion
+//? Del ticket
+//? ############################################################
 function fillResumen(indice) {
+    //* Copiamos el objeto actual
+    reporteActual = data[indice];
+
     moment.locale("es-us");
     //Seleccionamos los ids del resumen
     $("#modelo").html("<h4>" + data[indice]["Modelo"] + "</h4>");
@@ -180,15 +189,16 @@ function fillResumen(indice) {
     //Escribimos la varuiable en el local storage
     localStorage.setItem("data", JSON.stringify(data[indice]));
 
-    //Habiltar el boton generar ticket
-
     //Fecha del ticket
-    let ticketFecha = moment().format("DD-MM-YYYY , hh:mm a");
+    let ticketFecha = moment().format("DD-MM-YYYY, HH:mm");
+    //Fecha del ticket formteada para la base de datos
+    let ff = moment().format("YYYY-MM-DD HH:mm:ss");
+    let fechaArrastreFornateada = formatFecha(data[indice]["Fecha"]);
     $("#ticketFecha").html(
         "Fecha De Liberacion: <br>" +
             ticketFecha +
             "<br>Fecha De Arrastre: <br>" +
-            data[indice]["Fecha"] +
+            fechaArrastreFornateada +
             "<br>FOLIO: " +
             data[indice]["Folio"] +
             "<br>PLACAS: " +
@@ -202,7 +212,7 @@ function fillResumen(indice) {
     );
 
     //Guardar info para generar el ticket en una ventana nueva
-    ticketData.FechaTicket = ticketFecha;
+    ticketData.FechaTicket = ff;
     ticketData.FechaArrastre = data[indice]["Fecha"];
     ticketData.Folio = data[indice]["Folio"];
     ticketData.Placas = data[indice]["Placas"];
@@ -210,10 +220,27 @@ function fillResumen(indice) {
     ticketData.Tipo = data[indice]["Tipo"];
     ticketData.Color = data[indice]["Color"];
 
-    //Genetrar ticket
-    $("#generarTicket").html(
-        '<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>'
-    );
+    //*Verificamos si el reporte ha sido cerrado
+    if (reporteActual.Ticket[0].Estado == true) {
+        //Reporte cerrado, deshabilitamos la edicion del ticket
+        disableTicket();
+        //console.log(reporteActual);
+        //Llena la informacion del ticket
+        $("#ticketIFE").val(reporteActual.Ticket[0].IFE);
+        $("#ticketNombre").val(reporteActual.Ticket[0].Nombre);
+        $("#ticketImporte").val(reporteActual.Ticket[0].Importe);
+        $("#ticketImporteLetra").val(reporteActual.Ticket[0].ImporteLetra);
+        $("#ticketConcepto").val(reporteActual.Ticket[0].Concepto);
+        //Generamos el boton generar ticket
+        $("#generarTicket").html('<div class="alert alert-danger" role="alert">Ticket Cerrado!</div>');
+    } else {
+        //Generamos el boton generar ticket
+        $("#generarTicket").html(
+            '<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>'
+        );
+        limpiarTicket();
+        enableTicket();
+    }
 }
 
 function calculoDiasEnCorralon(fechaArrastre) {
@@ -265,12 +292,27 @@ function limpiarResumen() {
 }
 
 //*Informacion del ticket
-
 function ventanaTicket() {
     if (!validarTicket()) {
         return;
     }
+    //*Mostrar Ventana modal de confirmacion
+    confirmacionCierreTicket();
+}
 
+//? ############################################################
+//? FUNCTION()  Muestra La ventana modal de confirmacion del ticket
+//? ############################################################
+function confirmacionCierreTicket() {
+    $("#divModalConfirmacion").append("<p>Esta seguro de cerrar el ticket?</p>");
+    $("#divModalConfirmacion").append("<p>Una vez cerrado, no se podra editar la informacion</p>");
+    $("#modalConfirmacion").modal("toggle");
+}
+
+//? ############################################################
+//? FUNCTION()  Muestra la ventana del ticket
+//? ############################################################
+function mostrarTicket() {
     window.open(
         "vistas/ticket.php",
         "Impresion de Ticket",
@@ -278,6 +320,9 @@ function ventanaTicket() {
     );
 }
 
+//? ############################################################
+//? FUNCTION()  Valida que la info del ticket este lleno
+//? ############################################################
 function validarTicket() {
     let warning = false;
     ticketData.IFE = $("#ticketIFE").val();
@@ -302,6 +347,13 @@ function validarTicket() {
     return true;
 }
 
+//? ############################################################
+//? FUNCTION()  Limpia las alertas del modal warning
+//? ############################################################
+function clearModalWarning() {
+    $("#divModalWarning").html("");
+}
+
 function formatDate(date) {
     var d = new Date(date),
         month = "" + (d.getMonth() + 1),
@@ -314,4 +366,106 @@ function formatDate(date) {
     return [year, month, day].join("-");
 }
 
+//? ############################################################
+//? FUNCTION()
+//? ############################################################
+function generarTicket() {
+    //Genetrar ticket
+    $("#generarTicket").html(
+        '<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>'
+    );
+}
+
+//? ############################################################
+//? POST  Cierra el ticket y mustra el resultado en la ventana modal
+//? ############################################################
+function cerrarTicket() {
+    let confirmationBody = $("#divModalConfirmacion");
+    confirmationBody.html("");
+    confirmationBody.removeClass("alert-warning");
+    confirmationBody.addClass("alert-primary");
+    confirmationBody.html("<p>Cerrando ticket, espere...</p>");
+    confirmationBody.append(
+        '<div class="spinner-border text-primary" role="status"><span class= "sr-only">Loading...</span ></div>'
+    );
+
+    $("#okModalConfirmacion").prop("disabled", true);
+    $("#cancelModalConfirmacion").prop("disabled", true);
+
+    //Preparamos el json para ser enviado
+    let post = new Object();
+    post = ticketData;
+    post.Estado = true;
+    post.Region = region;
+    console.log(post);
+
+    $.ajax({
+        type: "post",
+        url: urlBase + "/mrd/public/api/ticket/close",
+        data: JSON.stringify(post),
+        dataType: "json",
+        contentType: "application/json",
+        success: function (response) {
+            //Reset Confirmacion modal
+            resetConfirmacionModal();
+            ticketData.Consecutivo = reporteActual.Ticket[0].PrefijoConsecutivo + response.msg;
+            console.log(ticketData);
+            localStorage.setItem("ticketData", JSON.stringify(ticketData));
+            mostrarTicket();
+        },
+    });
+}
+
+function resetConfirmacionModal() {
+    let confirmationBody = $("#divModalConfirmacion");
+
+    confirmationBody.html("");
+    confirmationBody.removeClass("alert-primary");
+    confirmationBody.addClass("alert-warning");
+
+    $("#okModalConfirmacion").prop("disabled", false);
+    $("#cancelModalConfirmacion").prop("disabled", false);
+
+    $("#modalConfirmacion").modal("toggle");
+}
+
 //TODO ajustar la DB para el cobro de tickets y cierre de tickets
+
+//Pasar de fecha en formato en a es
+function formatFecha(fecha) {
+    moment.locale("es");
+    moment().format("LTS");
+    let _ff = moment(fecha);
+    //console.log("Fecha formateada: " + day);
+    //console.log("Fecha formateada: " + moment(day).format("DD-MM-YYYY HH:mm LL"));
+    _ff = moment(_ff).format("DD-MM-YYYY HH:mm");
+    console.log("Fecha de arrastre: " + _ff);
+    return _ff;
+}
+
+//*Funcion para deshabilitar la edicion del tcket
+function disableTicket() {
+    $("#ticketIFE").prop("disabled", true);
+    $("#ticketNombre").prop("disabled", true);
+    $("#ticketImporte").prop("disabled", true);
+    $("#ticketImporteLetra").prop("disabled", true);
+    $("#ticketConcepto").prop("disabled", true);
+}
+
+//*Funcion para habilitar la edicion del tcket
+function enableTicket() {
+    $("#ticketIFE").prop("disabled", false);
+    $("#ticketNombre").prop("disabled", false);
+    $("#ticketImporte").prop("disabled", false);
+    $("#ticketImporteLetra").prop("disabled", false);
+    $("#ticketConcepto").prop("disabled", false);
+}
+
+//*Limpiar informacion del ticket
+function limpiarTicket() {
+    $("#ticketIFE").val("");
+    $("#ticketNombre").val("");
+    $("#ticketImporte").val("");
+    $("#ticketImporteLetra").val("");
+    $("#ticketConcepto").val("");
+}

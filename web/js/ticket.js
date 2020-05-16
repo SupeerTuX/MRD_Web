@@ -3,18 +3,18 @@ $(document).ready(function () {
     ticketData = JSON.parse(data);
 
     //Formatear fecha
-    let _ff = formatFecha(ticketData.FechaArrastre);
-    ticketData.FechaArrastre = _ff;
+    let fechaArrastreFormat = formatFecha(ticketData.FechaArrastre);
+    let fechaTicketFormat = formatFecha(ticketData.FechaTicket);
 
     $("#ticketFecha").html(
         "Fecha De Liberacion: <br>" +
-            ticketData.FechaTicket +
+            fechaTicketFormat +
             "<br>Fecha De Arrastre: <br>" +
-            ticketData.FechaArrastre +
+            fechaArrastreFormat +
             "<br>REF: " +
             ticketData.Folio +
             "<br>FOLIO: " +
-            ticketData.Folio +
+            ticketData.Consecutivo +
             "<br>PLACAS: " +
             ticketData.Placas +
             "<br>MARCA: " +

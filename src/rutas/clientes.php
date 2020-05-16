@@ -64,7 +64,7 @@ $app->get('/api/reporte/{fecha}/{region}', function (Request $request, Response 
         $resultado->execute();
         if ($resultado->rowCount() > 0) {
             //* Si existen reportes estan en $reportes
-            $reportes = $resultado->fetchAll();
+            $reportes = $resultado->fetchAll(PDO::FETCH_ASSOC);
             //* Por cada reporte en el array agregamos la informacion del ticket
             foreach ($reportes as $i => $v) {
                 //* Generamos la peticion para la informacion del ticket
@@ -78,7 +78,7 @@ $app->get('/api/reporte/{fecha}/{region}', function (Request $request, Response 
                     $resultado->bindParam(':folio', $_folio);
                     $resultado->execute();
                     if ($resultado->rowCount() > 0) {
-                        $ticket = $resultado->fetchAll();
+                        $ticket = $resultado->fetchAll(PDO::FETCH_ASSOC);
                         //* Informacion del ticket
                         $reportes[$i]['Ticket'] = $ticket;
                     } else {
@@ -142,7 +142,7 @@ $app->get('/api/reporte/{fecha1}/{fecha2}/{region}', function (Request $request,
                     $resultado->bindParam(':folio', $_folio);
                     $resultado->execute();
                     if ($resultado->rowCount() > 0) {
-                        $ticket = $resultado->fetchAll();
+                        $ticket = $resultado->fetchAll(PDO::FETCH_ASSOC);
                         //* Informacion del ticket
                         $reportes[$i]['Ticket'] = $ticket;
                     } else {
@@ -174,7 +174,10 @@ $app->get('/api/reporte/{fecha1}/{fecha2}/{region}', function (Request $request,
     }
 });
 
-//Get proporciona los reportes ingresados segun el folio proporcionado
+
+// *##################################################################### //
+// * http-> Get proporciona los reportes ingresados segun el folio proporcionado
+// *##################################################################### //
 $app->get('/api/buscar/{folio}/{region}', function (Request $request, Response $response, array $args) {
 
     $region = $args['region'];
@@ -188,8 +191,34 @@ $app->get('/api/buscar/{folio}/{region}', function (Request $request, Response $
         $resultado->execute();
 
         if ($resultado->rowCount() > 0) {
-            $reportes = $resultado->fetchAll();
+            $reportes = $resultado->fetchAll(PDO::FETCH_ASSOC);
+            //* Si el folio existe, leemos la informacion del ticket de este folio
+            //* Generamos la peticion para la informacion del ticket
+            foreach ($reportes as $i => $v) {
+                $_tabla = "folio_$region"; // -> nombre de la tabla
+                $sql = "SELECT * FROM $_tabla WHERE Folio=:folio";
+                try {
+                    $db = new db();
+                    $db = $db->connectDB();
+                    $resultado = $db->prepare($sql);
+                    $resultado->bindParam(':folio', $folio);
+                    $resultado->execute();
+                    if ($resultado->rowCount() > 0) {
+                        $ticket = $resultado->fetchAll(PDO::FETCH_ASSOC);
+                        //* Informacion del ticket
+                        $reportes[$i]['Ticket'] = $ticket;
+                    } else {
+                        //No hay informacion del ticket con este folio
+                    }
+                } catch (PDOException $e) {
+                    $response->getBody()->write(response(true, "Error al buscar informacion del ticket con folio= " . $folio . " " . $e->getMessage() . $sql, 400));
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus(400);
+                }
+            }
 
+            //*Devolvemos la respuesta al cliente
             $response->getBody()->write(json_encode($reportes));
             return $response
                 ->withHeader('Content-Type', 'application/json')

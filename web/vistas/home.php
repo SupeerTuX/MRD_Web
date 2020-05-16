@@ -284,15 +284,35 @@ if (isset($_SESSION['rol']) && $_SESSION['rol'] != 1) {
                     </button>
                 </div>
                 <div id="divModalWarning" class="modal-body alert alert-warning">
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="clearModalWarning()">OK</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!-- Modal Confirmacion -->
+    <div class="modal fade" id="modalConfirmacion" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Confirmacion Cierre De Ticket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="divModalConfirmacion" class="text-center modal-body alert alert-warning">
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelModalConfirmacion" type="button" onclick="resetConfirmacionModal()" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button id="okModalConfirmacion" type="button" onclick="cerrarTicket()" class="btn btn-primary">Cerrar Ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
     </script>

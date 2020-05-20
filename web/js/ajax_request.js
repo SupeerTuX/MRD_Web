@@ -132,7 +132,7 @@ function getReportByDate(fechainicial, fechaFinal, region) {
             limpiarLista();
             response.forEach((element, index) => {
                 $("#listaReportes").append(
-                    '<a href="#" class="list-group-item list-group-item-action" onClick="fillCard(' +
+                    '<a class="list-group-item list-group-item-action" onClick="fillCard(' +
                         index +
                         ')">' +
                         element["Folio"] +

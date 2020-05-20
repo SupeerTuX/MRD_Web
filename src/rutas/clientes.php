@@ -239,7 +239,7 @@ $app->get('/api/buscar/{folio}/{region}', function (Request $request, Response $
 });
 
 
-//Generacion de folio
+
 $app->get('/api/folio/{region}', function (Request $request, Response $response, array $args) {
     //Recojemos el argumento pasado
     $data = $args['region'];

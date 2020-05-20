@@ -74,6 +74,11 @@ $(document).ready(function () {
 });
 
 function getReportByDate(fechainicial, fechaFinal, region) {
+    //Arreglamos la region, en caso de que sea poza rica
+    if (region == "poza rica") {
+        region = "poza_rica";
+    }
+
     let url;
     //Si se paso el argumento lo agregamos a al url
     if (fechaFinal != "") {
@@ -194,13 +199,21 @@ function fillResumen(indice) {
     //Fecha del ticket formteada para la base de datos
     let ff = moment().format("YYYY-MM-DD HH:mm:ss");
     let fechaArrastreFornateada = formatFecha(data[indice]["Fecha"]);
+
+    if (reporteActual.Ticket[0].Consecutivo == null) {
+        reporteActual.Ticket[0].Consecutivo = "XX";
+    }
+
     $("#ticketFecha").html(
         "Fecha De Liberacion: <br>" +
             ticketFecha +
             "<br>Fecha De Arrastre: <br>" +
             fechaArrastreFornateada +
-            "<br>FOLIO: " +
+            "<br>REF: " +
             data[indice]["Folio"] +
+            "<br>FOLIO: " +
+            reporteActual.Ticket[0].PrefijoConsecutivo +
+            reporteActual.Ticket[0].Consecutivo +
             "<br>PLACAS: " +
             data[indice]["Placas"] +
             "<br>MARCA: " +
@@ -397,7 +410,6 @@ function cerrarTicket() {
     post = ticketData;
     post.Estado = true;
     post.Region = region;
-    console.log(post);
 
     $.ajax({
         type: "post",
@@ -409,9 +421,15 @@ function cerrarTicket() {
             //Reset Confirmacion modal
             resetConfirmacionModal();
             ticketData.Consecutivo = reporteActual.Ticket[0].PrefijoConsecutivo + response.msg;
-            console.log(ticketData);
+            //console.log(ticketData);
             localStorage.setItem("ticketData", JSON.stringify(ticketData));
             mostrarTicket();
+            //Recargamos la informacion
+            document.getElementById("btnFecha").click();
+        },
+        error: function () {
+            resetConfirmacionModal();
+            alert("Ha ocurrido un error al cerrar el ticket");
         },
     });
 }
@@ -428,8 +446,6 @@ function resetConfirmacionModal() {
 
     $("#modalConfirmacion").modal("toggle");
 }
-
-//TODO ajustar la DB para el cobro de tickets y cierre de tickets
 
 //Pasar de fecha en formato en a es
 function formatFecha(fecha) {

@@ -299,15 +299,73 @@ $(document).ready(function () {
 });
 
 function fillCard(indice) {
+    let fechaArrastre;
+    let fechaLiberacion;
+
+    fechaArrastre = formatFecha(data[indice]["Fecha"]);
+
+    //* Informacion del ticket
+    //* Checamos si hay informacion del ticket
+    if (data[indice].Ticket[0].Estado == true) {
+        //console.log("Hay informacion del ticket");
+        $("#ticketEstado").html('<div class="alert alert-danger" role="alert">Ticket Cerrado</div>');
+        //Formateamos la fecha del ticket
+        fechaLiberacion = formatFecha(data[indice].Ticket[0].FechaTicket);
+
+        //Llenamos los datos del ticket
+        $("#ticketFecha").html(
+            "Fecha De Liberacion: <br>" +
+                fechaLiberacion +
+                "<br>Fecha De Arrastre: <br>" +
+                fechaArrastre +
+                "<br>REF: " +
+                data[indice]["Folio"] +
+                "<br>FOLIO: " +
+                data[indice].Ticket[0].PrefijoConsecutivo +
+                data[indice].Ticket[0].Consecutivo +
+                "<br>PLACAS: " +
+                data[indice]["Placas"] +
+                "<br>MARCA: " +
+                data[indice]["VahiculoMarca"] +
+                "<br>TIPO: " +
+                data[indice]["Tipo"] +
+                "<br>COLOR: " +
+                data[indice]["Color"]
+        );
+        $("#ticketIFE").val(data[indice].Ticket[0].IFE);
+        $("#ticketNombre").val(data[indice].Ticket[0].Nombre);
+        $("#ticketImporte").val(data[indice].Ticket[0].Importe);
+        $("#ticketImporteLetra").val(data[indice].Ticket[0].ImporteLetra);
+        $("#ticketConcepto").val(data[indice].Ticket[0].Concepto);
+    } else {
+        //console.log("No hay informacion de ticket");
+        $("#ticketEstado").html('<div class="alert alert-success" role="alert">Ticket Abierto</div>');
+        //Limpiamos el contenido del ticket
+        $("#ticketFecha").html("");
+        $("#ticketIFE").val("");
+        $("#ticketNombre").val("");
+        $("#ticketImporte").val("");
+        $("#ticketImporteLetra").val("");
+        $("#ticketConcepto").val("");
+    }
+
+    //Llenando
     $("#cardTitle").html(
         '<div class="alert alert-success card-title" role="alert">Folio: ' + data[indice]["Folio"] + "</div>"
     );
     $("#listaResumen").html("");
-    $("#listaResumen").append('<li class="list-group-item">Fecha de Arrastre: ' + data[indice]["Fecha"] + " </li>");
+    $("#listaResumen").append('<li class="list-group-item">Fecha de Arrastre: ' + fechaArrastre + " </li>");
+    $("#listaResumen").append('<li class="list-group-item">Fecha de Liberacion: ' + fechaLiberacion + " </li>");
     calculoDiasEnCorralon(data[indice]["Fecha"]);
     $("#listaResumen").append('<li class="list-group-item">Placas: ' + data[indice]["Placas"] + " </li>");
     $("#listaResumen").append('<li class="list-group-item">Direccion: ' + data[indice]["Direccion"] + " </li>");
     $("#listaResumen").append('<li class="list-group-item">Grua: ' + data[indice]["Grua"] + " </li>");
+    $("#listaResumen").append(
+        '<li class="list-group-item">Importe Cobrado: $' + data[indice].Ticket[0].Importe + " </li>"
+    );
+    $("#listaResumen").append(
+        '<li class="list-group-item">Importe Con Letra: ' + data[indice].Ticket[0].ImporteLetra + " </li>"
+    );
 
     //Link a ver el resumen completo
     $("#listaResumen").append(
@@ -514,3 +572,15 @@ $("#chboxHabilitarFechaFinal").click(function () {
         $("#fechaFinal").prop("disabled", true);
     }
 });
+
+//Pasar de fecha en formato en a es
+function formatFecha(fecha) {
+    moment.locale("es");
+    moment().format("LTS");
+    let _ff = moment(fecha);
+    //console.log("Fecha formateada: " + day);
+    //console.log("Fecha formateada: " + moment(day).format("DD-MM-YYYY HH:mm LL"));
+    _ff = moment(_ff).format("DD-MM-YYYY HH:mm");
+    console.log("Fecha de arrastre: " + _ff);
+    return _ff;
+}

@@ -112,6 +112,12 @@
                                 <label for="btnFolio">Buscar Por Folio</label>
                                 <button id="btnFolio" type="button" class="form-control btn btn-secondary">Buscar</button>
                             </div>
+                            <div class="form-group col-md-3">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="btnReporte">Generar Reporte</label>
+                                <button id="btnReporte" onclick="generarReporte()" type="button" class="form-control btn btn-success">Reporte</button>
+                            </div>
                         </div>
                     </form>
                     <!-- /Fromulario de busqueda -->

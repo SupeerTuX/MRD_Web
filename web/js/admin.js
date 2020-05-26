@@ -584,3 +584,33 @@ function formatFecha(fecha) {
     console.log("Fecha de arrastre: " + _ff);
     return _ff;
 }
+
+function generarReporte() {
+    let reporteJSON = new Object();
+
+    reporteJSON.Reportes = [];
+    reporteJSON.Reportes[0] = { Folio: "XAL01" };
+    reporteJSON.Reportes[1] = { Folio: "XAL02" };
+    reporteJSON.Reportes[2] = { Folio: "XAL09" };
+    reporteJSON.Region = "xalapa";
+
+    /*
+    reporteJSON.Reporte1 = "XAL01";
+    reporteJSON.Reporte2 = "XAL02";
+    reporteJSON.Reporte3 = "XAL03";
+    console.log(reporteJSON);
+*/
+
+    //generarReportePost(reporteJSON);
+
+    $.ajax({
+        type: "POST",
+        url: "http://localhost/mrd/web/reportes.php",
+        dataType: "json",
+        data: reporteJSON,
+        success: function (response) {
+            console.log("Respuesta del servidor POST: ");
+            console.log(response);
+        },
+    });
+}

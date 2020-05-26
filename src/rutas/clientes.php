@@ -13,7 +13,6 @@ $app = AppFactory::create();
 $app->setBasePath("/mrd/public");
 
 
-
 //Get Todos los clientes
 $app->get('/api/hello/world', function (Request $request, Response $response, array $args) {
     // TODO: Validar datos de enntrada
@@ -239,7 +238,9 @@ $app->get('/api/buscar/{folio}/{region}', function (Request $request, Response $
 });
 
 
-
+// *##################################################################### //
+// * http-> Get Genera un folio en la region dada
+// *##################################################################### //
 $app->get('/api/folio/{region}', function (Request $request, Response $response, array $args) {
     //Recojemos el argumento pasado
     $data = $args['region'];
@@ -338,7 +339,9 @@ $app->get('/api/folio/{region}', function (Request $request, Response $response,
 });
 
 
-//Routa POST
+// ?##################################################################### //
+// ? http-> Post Servicio para crear un nuevo reporte
+// ?##################################################################### //
 $app->post('/api/reporte', function (Request $request, Response $response, array $args) {
     //Verificamos los datos de entrada
     $data = verifyRequiredParams(array(
@@ -473,7 +476,9 @@ $app->post('/api/reporte', function (Request $request, Response $response, array
 });
 
 
-//Manejo de imagenes
+// ?##################################################################### //
+// ? http-> Post Servicio para recibir y manejar una sola imagen
+// ?##################################################################### //
 $app->post('/api/upload', function (Request $request, Response $response) {
     $directory = $this->get('upload_directory');
 
@@ -493,7 +498,9 @@ $app->post('/api/upload', function (Request $request, Response $response) {
 });
 
 
-//Manejo de imagenes
+// ?##################################################################### //
+// ? http-> Post Servicio para recibir y manejar las imagenes
+// ?##################################################################### //
 $app->post('/api/multiupload/{folio}/{region}', function (Request $request, Response $response, array $args) {
     $directory = $this->get('upload_directory');
     $data = $args['folio'];
@@ -546,7 +553,9 @@ $app->post('/api/multiupload/{folio}/{region}', function (Request $request, Resp
 });
 
 
-//+ Regresa los ususarios segun la region
+// *##################################################################### //
+// * http-> Get Regresa los ususarios segun la region
+// *##################################################################### //
 $app->get('/api/user/{region}', function (Request $request, Response $response, array $args) {
     $region = $args['region'];
     $sql = 'SELECT id, user, nombre, rol_id, region FROM usuarios WHERE region = :region';
@@ -578,7 +587,9 @@ $app->get('/api/user/{region}', function (Request $request, Response $response, 
 });
 
 
-// Actualiza el usuario
+// ?##################################################################### //
+// ? http-> Post Servicio para actualizar la informacion del usuario
+// ?##################################################################### //
 $app->post('/api/user/update', function (Request $request, Response $response, array $args) {
 
     $data = verifyRequiredParams(array('id', 'nombre', 'region', 'rol', 'user'), $request);
@@ -681,7 +692,9 @@ $app->post('/api/user/update', function (Request $request, Response $response, a
 });
 
 
-//Funcion para nuevo usuario
+// ?##################################################################### //
+// ? http-> Post Servicio para crear un nuevo usuario
+// ?##################################################################### //
 $app->post('/api/user/new', function (Request $request, Response $response, array $args) {
     $data = verifyRequiredParams(array('nombre', 'pass', 'region', 'user'), $request);
     $payload = json_encode($data);
@@ -791,6 +804,9 @@ $app->post('/api/user/new', function (Request $request, Response $response, arra
 
 
 //Borrar Usuario
+// !##################################################################### //
+// ! http-> Delete Borra la informacion del usuario
+// !##################################################################### //
 $app->delete('/api/user', function (Request $request, Response $response, array $args) {
     $data = verifyRequiredParams(array('user', 'region'), $request);
     $payload = json_encode($data);
@@ -836,7 +852,9 @@ $app->delete('/api/user', function (Request $request, Response $response, array 
         ->withStatus(201);
 });
 
-
+// ?##################################################################### //
+// ? http-> Post Edita el password del usuario
+// ?##################################################################### //
 $app->post('/api/user/editpsw', function (Request $request, Response $response, array $args) {
     $data = verifyRequiredParams(array('user', 'pass'), $request);
     $payload = json_encode($data);
@@ -977,6 +995,49 @@ $app->post('/api/ticket/close', function (Request $request, Response $response, 
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(401);
     }
+});
+
+
+// ?##################################################################### //
+// ? http-> Post Servicio para generar reporte en PDF
+// ?##################################################################### //
+$app->post('/api/generar/reporte', function (Request $request, Response $response, array $args) {
+
+    //* Parametrso requeridos en el JSON para procesar la solicitud
+    $data = verifyRequiredParams(array('Region'), $request);
+
+    //* Codificamos en JSON la respuesta si hay algun error
+    $payload = json_encode($data);
+
+    //* Si verifyRequiredParams(array(), $request) devolviio error
+    //* Terminamos el proceso y devolvemos el error 
+    if ($data["error"]) {
+        $response->getBody()->write($payload);
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(400);
+    }
+
+    //* Obtenemos el JSON de la request
+    $body = $request->getBody();
+
+    //* Decodificamos el JSON en un array
+    $data = json_decode($body, true);
+
+    //echo var_dump($data['Reportes'][1]['Folio']);
+    $mpdf = new \Mpdf\Mpdf();
+    $mpdf->WriteHTML('<h1>Hello world!</h1>');
+
+
+
+    //* Consulta SQL
+
+    $response->getBody()->write($mpdf->Output("reporte.pdf", "I"));
+    return $response
+        ->withHeader('Content-Type', 'application/pdf')
+        ->withStatus(200);
+
+    //return $response;
 });
 
 

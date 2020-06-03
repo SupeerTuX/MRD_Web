@@ -23,6 +23,7 @@ class ComposerStaticInit7c2a415b8be99409e6518366a268115c
         array (
             'Symfony\\Polyfill\\Util\\' => 22,
             'Symfony\\Polyfill\\Php56\\' => 23,
+            'Svg\\' => 4,
             'SuperClosure\\' => 13,
             'Slim\\Tests\\' => 11,
             'Slim\\Psr7\\' => 10,
@@ -48,11 +49,13 @@ class ComposerStaticInit7c2a415b8be99409e6518366a268115c
         ),
         'F' => 
         array (
+            'FontLib\\' => 8,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
         ),
         'D' => 
         array (
+            'Dompdf\\' => 7,
             'DeepCopy\\' => 9,
             'DI\\' => 3,
         ),
@@ -70,6 +73,10 @@ class ComposerStaticInit7c2a415b8be99409e6518366a268115c
         'Symfony\\Polyfill\\Php56\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
+        ),
+        'Svg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
         ),
         'SuperClosure\\' => 
         array (
@@ -125,6 +132,10 @@ class ComposerStaticInit7c2a415b8be99409e6518366a268115c
         array (
             0 => __DIR__ . '/..' . '/php-di/invoker/src',
         ),
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
         'Fig\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/fig/http-message-util/src',
@@ -132,6 +143,10 @@ class ComposerStaticInit7c2a415b8be99409e6518366a268115c
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
         'DeepCopy\\' => 
         array (
@@ -143,11 +158,32 @@ class ComposerStaticInit7c2a415b8be99409e6518366a268115c
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Sabberworm\\CSS' => 
+            array (
+                0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
+            ),
+        ),
+    );
+
+    public static $classMap = array (
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
+        'HTML5_Data' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Data.php',
+        'HTML5_InputStream' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/InputStream.php',
+        'HTML5_Parser' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Parser.php',
+        'HTML5_Tokenizer' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Tokenizer.php',
+        'HTML5_TreeBuilder' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/TreeBuilder.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit7c2a415b8be99409e6518366a268115c::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit7c2a415b8be99409e6518366a268115c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7c2a415b8be99409e6518366a268115c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit7c2a415b8be99409e6518366a268115c::$classMap;
 
         }, null, ClassLoader::class);
     }

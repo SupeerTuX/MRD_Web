@@ -132,11 +132,15 @@ function getReportByDate(fechainicial, fechaFinal, region) {
             limpiarLista();
             response.forEach((element, index) => {
                 $("#listaReportes").append(
-                    '<a class="list-group-item list-group-item-action" onClick="fillCard(' +
+                    '<div class="input-group-prepend"><div class="input-group-prepend" style="border: solid 1px; border-color: lightgrey; margin: 5px"><input id="' +
+                        element["Folio"] +
+                        '" type="checkbox" onclick="seleccionarReporte(' +
+                        element["Folio"] +
+                        ')"></div><a class="list-group-item list-group-item-action" onClick="fillCard(' +
                         index +
                         ')">' +
                         element["Folio"] +
-                        "</a>"
+                        "</a></div>"
                 );
                 //<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
                 // console.log(element['Fecha']);

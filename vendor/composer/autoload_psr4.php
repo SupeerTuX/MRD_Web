@@ -9,6 +9,7 @@ return array(
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'Symfony\\Polyfill\\Util\\' => array($vendorDir . '/symfony/polyfill-util'),
     'Symfony\\Polyfill\\Php56\\' => array($vendorDir . '/symfony/polyfill-php56'),
+    'Svg\\' => array($vendorDir . '/phenx/php-svg-lib/src/Svg'),
     'SuperClosure\\' => array($vendorDir . '/jeremeamia/superclosure/src'),
     'Slim\\Tests\\' => array($vendorDir . '/slim/slim/tests'),
     'Slim\\Psr7\\' => array($vendorDir . '/slim/psr7/src'),
@@ -22,8 +23,10 @@ return array(
     'PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),
     'Mpdf\\' => array($vendorDir . '/mpdf/mpdf/src'),
     'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
+    'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src/FontLib'),
     'Fig\\Http\\Message\\' => array($vendorDir . '/fig/http-message-util/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'Dompdf\\' => array($vendorDir . '/dompdf/dompdf/src'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'DI\\' => array($vendorDir . '/php-di/php-di/src'),
 );

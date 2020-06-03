@@ -614,3 +614,52 @@ function generarReporte() {
         },
     });
 }
+
+//? Objeto Folios seleccionados
+//var foliosSeleccionados = { folios: {} };
+let reporteJSON = new Object();
+reporteJSON.Folios = [];
+
+//* Selector de reportes
+function seleccionarReporte(folio) {
+    let _id = "#" + folio.id;
+
+    if ($(_id).prop("checked")) {
+        //console.log(_id + " Checked");
+        reporteJSON.Folios[_id] = folio.id;
+    } else {
+        //* Eliminamos el elemento de la lista
+        //console.log(_id + " Unchecked");
+        delete reporteJSON.Folios[_id];
+    }
+
+    //! Asignar la region
+    reporteJSON.Region = "xalapa";
+
+    let i = 0;
+    let plantilla = "";
+
+    for (x in reporteJSON.Folios) {
+        //console.log(reporteJSON.Folios[x]);
+        plantilla += "Reportes[" + i + "][Folio]=" + reporteJSON.Folios[x] + "&";
+        i++;
+    }
+
+    plantilla += "Region=" + reporteJSON.Region;
+    console.log(plantilla);
+
+    //*Generacion del enlace para el botono generar reporte
+    let boton = $("#divReporte");
+    //*Si no hay reportes seleccionados borramos el boton
+    if (!i) {
+        boton.html("");
+    } else {
+        boton.html(
+            '<label for="btnGenerarReporte">Generar Reporte</label><a id="btnGenerarReporte" target="_blank" class="form-control btn btn-success" href="' +
+                urlBase +
+                "/mrd/web/reportes.php?" +
+                plantilla +
+                '" role="button">Reporte</a>'
+        );
+    }
+}

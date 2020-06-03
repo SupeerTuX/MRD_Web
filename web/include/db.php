@@ -16,7 +16,8 @@ class DB
         $this->user     = 'ustgmnet_appreportes';
         $this->password = "x8gYH7skHn2V";
         $this->charset  = 'utf8mb4';
-*/
+        */
+
         $this->host     = 'localhost';
         $this->db       = 'mrd';
         $this->user     = 'root';
@@ -26,7 +27,6 @@ class DB
 
     function connect()
     {
-
         try {
 
             $connection = "mysql:host=" . $this->host . ";dbname=" . $this->db;

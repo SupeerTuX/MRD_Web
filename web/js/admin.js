@@ -151,6 +151,8 @@ $(document).ready(function () {
 
     //Boton buscar por Fecha
     $("#btnFecha").click(function () {
+        //Reset contenido del objeto
+        reporteJSON.Folios = [];
         //* Fecha inicial
         fecha = $("#fechaInicial").val();
         //* Final
@@ -350,9 +352,7 @@ function fillCard(indice) {
     }
 
     //Llenando
-    $("#cardTitle").html(
-        '<div class="alert alert-success card-title" role="alert">Folio: ' + data[indice]["Folio"] + "</div>"
-    );
+    $("#cardTitle").html('<div class="alert alert-success card-title" role="alert">Folio: ' + data[indice]["Folio"] + "</div>");
     $("#listaResumen").html("");
     $("#listaResumen").append('<li class="list-group-item">Fecha de Arrastre: ' + fechaArrastre + " </li>");
     $("#listaResumen").append('<li class="list-group-item">Fecha de Liberacion: ' + fechaLiberacion + " </li>");
@@ -360,30 +360,16 @@ function fillCard(indice) {
     $("#listaResumen").append('<li class="list-group-item">Placas: ' + data[indice]["Placas"] + " </li>");
     $("#listaResumen").append('<li class="list-group-item">Direccion: ' + data[indice]["Direccion"] + " </li>");
     $("#listaResumen").append('<li class="list-group-item">Grua: ' + data[indice]["Grua"] + " </li>");
-    $("#listaResumen").append(
-        '<li class="list-group-item">Importe Cobrado: $' + data[indice].Ticket[0].Importe + " </li>"
-    );
-    $("#listaResumen").append(
-        '<li class="list-group-item">Importe Con Letra: ' + data[indice].Ticket[0].ImporteLetra + " </li>"
-    );
+    $("#listaResumen").append('<li class="list-group-item">Importe Cobrado: $' + data[indice].Ticket[0].Importe + " </li>");
+    $("#listaResumen").append('<li class="list-group-item">Importe Con Letra: ' + data[indice].Ticket[0].ImporteLetra + " </li>");
 
     //Link a ver el resumen completo
-    $("#listaResumen").append(
-        '<button type="button" onClick="verReporte()" class="btn btn-link">Ver Reporte Completo</button>'
-    );
+    $("#listaResumen").append('<button type="button" onClick="verReporte()" class="btn btn-link">Ver Reporte Completo</button>');
     //Reporte fotografico
-    $("#img1").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img1"] + '" alt = "lateral1" width = "100%">'
-    );
-    $("#img2").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img2"] + '" alt = "lateral2" width = "100%">'
-    );
-    $("#img3").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img3"] + '" alt = "lateral3" width = "100%">'
-    );
-    $("#img4").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img4"] + '" alt = "lateral4" width = "100%">'
-    );
+    $("#img1").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img1"] + '" alt = "lateral1" width = "100%">');
+    $("#img2").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img2"] + '" alt = "lateral2" width = "100%">');
+    $("#img3").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img3"] + '" alt = "lateral3" width = "100%">');
+    $("#img4").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img4"] + '" alt = "lateral4" width = "100%">');
     //Escribimos la varuiable en el local storage
     localStorage.setItem("data", JSON.stringify(data[indice]));
 }
@@ -410,9 +396,7 @@ function calculoDiasEnCorralon(fechaArrastre) {
     //console.log("Dias: " + dias + " ,Horas: " + horas + " ,FraccionHoras: " + fraccionHoras);
 
     //$('#diasCorralon').html('<h5>' + dias + ' Dias con ' + horas + ' horas </h5>');
-    $("#listaResumen").append(
-        '<li class="list-group-item">Dias en corralon: ' + dias + " Dias con " + horas + " horas</li>"
-    );
+    $("#listaResumen").append('<li class="list-group-item">Dias en corralon: ' + dias + " Dias con " + horas + " horas</li>");
 }
 
 function limpiarCard() {
@@ -457,11 +441,7 @@ function fillUsers(usuarioData) {
 
     usuarioData.forEach(function (element, index) {
         $("#listaUsuarios").append(
-            '<a href="#" class="list-group-item list-group-item-action" onClick="fillUsersDetail(' +
-                index +
-                ')">' +
-                element["nombre"] +
-                "</a>"
+            '<a href="#" class="list-group-item list-group-item-action" onClick="fillUsersDetail(' + index + ')">' + element["nombre"] + "</a>"
         );
     });
 
@@ -496,9 +476,7 @@ function userEdit() {
     $("#userFullName").prop("disabled", false);
     $("#userName").prop("disabled", false);
     $("#userRegion").prop("disabled", false);
-    $("#btnEditUser").html(
-        '<button id="btnEditUser" type="button" onClick="userSave()"class= "btn btn-primary" >Guardar Cambios</button >'
-    );
+    $("#btnEditUser").html('<button id="btnEditUser" type="button" onClick="userSave()"class= "btn btn-primary" >Guardar Cambios</button >');
     $("#radioUser").prop("disabled", false);
     $("#radioAdmin").prop("disabled", false);
 }
@@ -507,9 +485,7 @@ function formReset() {
     $("#userFullName").prop("disabled", true);
     $("#userName").prop("disabled", true);
     $("#userRegion").prop("disabled", true);
-    $("#btnEditUser").html(
-        '<button id="btnEditUser" type="button" onClick="userEdit()"class= "btn btn-primary" >Edit</button >'
-    );
+    $("#btnEditUser").html('<button id="btnEditUser" type="button" onClick="userEdit()"class= "btn btn-primary" >Edit</button >');
 
     $("#radioUser").prop("disabled", true);
     $("#radioAdmin").prop("disabled", true);
@@ -523,9 +499,7 @@ function userFormClean() {
     $("#userRegion").prop("disabled", true);
     $("#radioUser").prop("disabled", true);
     $("#radioAdmin").prop("disabled", true);
-    $("#btnEditUser").html(
-        '<button id="btnEditUser" type="button" onClick="userEdit()"class= "btn btn-primary" >Edit</button >'
-    );
+    $("#btnEditUser").html('<button id="btnEditUser" type="button" onClick="userEdit()"class= "btn btn-primary" >Edit</button >');
     $("#listaUsuarios").html('<a href="#" class="list-group-item list-group-item-action active">Usuarios</a >');
 }
 
@@ -585,36 +559,6 @@ function formatFecha(fecha) {
     return _ff;
 }
 
-function generarReporte() {
-    let reporteJSON = new Object();
-
-    reporteJSON.Reportes = [];
-    reporteJSON.Reportes[0] = { Folio: "XAL01" };
-    reporteJSON.Reportes[1] = { Folio: "XAL02" };
-    reporteJSON.Reportes[2] = { Folio: "XAL09" };
-    reporteJSON.Region = "xalapa";
-
-    /*
-    reporteJSON.Reporte1 = "XAL01";
-    reporteJSON.Reporte2 = "XAL02";
-    reporteJSON.Reporte3 = "XAL03";
-    console.log(reporteJSON);
-*/
-
-    //generarReportePost(reporteJSON);
-
-    $.ajax({
-        type: "POST",
-        url: "http://localhost/mrd/web/reportes.php",
-        dataType: "json",
-        data: reporteJSON,
-        success: function (response) {
-            console.log("Respuesta del servidor POST: ");
-            console.log(response);
-        },
-    });
-}
-
 //? Objeto Folios seleccionados
 //var foliosSeleccionados = { folios: {} };
 let reporteJSON = new Object();
@@ -634,7 +578,7 @@ function seleccionarReporte(folio) {
     }
 
     //! Asignar la region
-    reporteJSON.Region = "xalapa";
+    reporteJSON.Region = determinarRegion(folio.id);
 
     let i = 0;
     let plantilla = "";
@@ -650,16 +594,59 @@ function seleccionarReporte(folio) {
 
     //*Generacion del enlace para el botono generar reporte
     let boton = $("#divReporte");
+    let excel = $("#divExcel");
     //*Si no hay reportes seleccionados borramos el boton
     if (!i) {
         boton.html("");
+        excel.html("");
     } else {
         boton.html(
-            '<label for="btnGenerarReporte">Generar Reporte</label><a id="btnGenerarReporte" target="_blank" class="form-control btn btn-success" href="' +
+            '<a id="btnGenerarReporte" target="_blank" class="form-control btn btn-success" href="' +
                 urlBase +
                 "/mrd/web/reportes.php?" +
                 plantilla +
-                '" role="button">Reporte</a>'
+                '" role="button">PDF</a>'
         );
+
+        excel.html(
+            '<a id="btnGenerarReporte" target="_blank" class="form-control btn btn-primary" href="' +
+                urlBase +
+                "/mrd/web/excel.php?" +
+                plantilla +
+                '" role="button">Excel</a>'
+        );
+    }
+}
+
+//? ############################################################
+//? FUNCTION()  Muestra la ventana del ticket
+//? ############################################################
+function mostrarTicket() {
+    window.open(
+        "vistas/verticket.php",
+        "Impresion de Ticket",
+        "toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=300,height=800,left = 390,top = 50"
+    );
+}
+
+function determinarRegion(folio) {
+    if (folio.indexOf("CTP") != -1) {
+        return "coatepec";
+    } else if (folio.indexOf("VER") != -1) {
+        return "veracruz";
+    } else if (folio.indexOf("PUE") != -1) {
+        return "puebla";
+    } else if (folio.indexOf("PZR") != -1) {
+        return "poza_rica";
+    } else if (folio.indexOf("MIN") != -1) {
+        return "minatitlan";
+    } else if (folio.indexOf("CDB") != -1) {
+        return "cordoba";
+    } else if (folio.indexOf("COA") != -1) {
+        return "coatzacoalcos";
+    } else if (folio.indexOf("XAL") != -1) {
+        return "xalapa";
+    } else {
+        return "RegionNoValida";
     }
 }

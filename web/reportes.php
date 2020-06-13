@@ -88,8 +88,6 @@ if (isset($_GET['Reportes'])) {
         // $Tickets[$x['Folio']] Contiene la informacion del folio actual
         //$html Buffer con el codigo html del reporte
 
-        //! Tanque de gasolina cambiarlo por porcentage
-
         $html = '<!DOCTYPE html>
 <html>
     <head>

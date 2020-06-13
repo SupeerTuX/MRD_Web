@@ -11,9 +11,10 @@ $(document).ready(function () {
             fechaTicketFormat +
             "<br>Fecha De Arrastre: <br>" +
             fechaArrastreFormat +
-            "<br>REF: " +
+            "<br>REPORTE: " +
             ticketData.Folio +
             "<br>FOLIO: " +
+            ticketData.PrefijoConsecutivo +
             ticketData.Consecutivo +
             "<br>PLACAS: " +
             ticketData.Placas +
@@ -28,7 +29,7 @@ $(document).ready(function () {
     //Conceptos
     $("#ticketIFE").val(ticketData.IFE);
     $("#ticketNombre").val(ticketData.Nombre);
-    $("#ticketImporte").val(ticketData.Importe);
+    $("#ticketImporte").val("$" + ticketData.Importe);
     $("#ticketImporteLetra").val(ticketData.ImporteLetra);
     $("#ticketConcepto").val(ticketData.Concepto);
 });

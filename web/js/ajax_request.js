@@ -147,6 +147,9 @@ function getReportByDate(fechainicial, fechaFinal, region) {
             });
             indice = 0;
             fillCard(indice);
+            $("#divBtnMostrarTicket").html(
+                '<button type="button" onclick="mostrarTicket()" class="btn btn-primary">Mostrar Ticket</button>'
+            );
             console.log(response);
         } else {
             if (fechaFinal) {
@@ -164,7 +167,7 @@ function getReportByDate(fechainicial, fechaFinal, region) {
                         "</div >"
                 );
             }
-
+            $("#divBtnMostrarTicket").html("");
             limpiarCard();
             limpiarLista();
             //Limpiar
@@ -260,39 +263,6 @@ function updateUserPost(dataPost) {
         error: function () {
             console.log("A ocurrido un error");
             console.log(response);
-        },
-        timeout: 1000,
-    });
-}
-
-//Generacion de reportes
-function generarReportePost(dataPost) {
-    $.ajax({
-        type: "post",
-        url: urlBase + "/mrd/public/api/generar/reporte",
-        dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify(dataPost),
-        beforeSend: function () {
-            console.log("Generando Reportes...");
-        },
-        success: function (response) {
-            console.log("Respuesta del servidor POST: ");
-            console.log(response);
-        },
-        error: function (response) {
-            console.log("A ocurrido un error");
-            console.log(response);
-            var blob = new Blob([response]);
-            const url = window.URL.createObjectURL(blob);
-            var a = document.createElement("a");
-            a.href = url;
-            a.download = "myFile.pdf";
-            a.click();
-            setTimeout(function () {
-                // For Firefox it is necessary to delay revoking the ObjectURL
-                window.URL.revokeObjectURL(data), 100;
-            });
         },
         timeout: 1000,
     });

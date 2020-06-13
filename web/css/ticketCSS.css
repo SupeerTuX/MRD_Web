@@ -1,6 +1,11 @@
 .ticketFont {
     font-size: 12px;
-    font-family: 'Times New Roman';
+    font-family: "Roboto Mono", monospace;
+}
+
+#letraMenor {
+    font-size: 10px;
+    font-family: "Roboto Mono", monospace;
 }
 
 td,
@@ -13,34 +18,36 @@ table {
 
 td.linea,
 th.linea {
-    width: 155px;
-    max-width: 155px;
+    width: 250px;
+    max-width: 250px;
     text-align: center;
     align-content: center;
 }
 
 .sinborde {
     border: 0;
-    border-bottom: 1px solid black
+    border-bottom: 1px solid black;
+    font-size: 12px;
+    font-family: "Roboto Mono", monospace;
 }
 
 td.producto,
 th.producto {
-    width: 75px;
-    max-width: 75px;
+    width: 250px;
+    max-width: 250px;
 }
 
 td.cantidad,
 th.cantidad {
-    width: 40px;
-    max-width: 40px;
+    width: 250px;
+    max-width: 250px;
     word-break: break-all;
 }
 
 td.precio,
 th.precio {
-    width: 40px;
-    max-width: 40px;
+    width: 250px;
+    max-width: 250px;
     word-break: break-all;
 }
 
@@ -50,8 +57,10 @@ th.precio {
 }
 
 .ticket {
-    width: 160px;
-    max-width: 160px;
+    width: 260px;
+    max-width: 260px;
+}
+.contorno {
     border: dashed 2px;
 }
 

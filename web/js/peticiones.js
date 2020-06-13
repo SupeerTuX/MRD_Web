@@ -6,8 +6,8 @@ var fechaFormat;
 var ticketData = new Object();
 var reporteActual;
 
-//var urlBase = "http://consulta.ustgm.net";
-var urlBase = "http://localhost";
+var urlBase = "http://consulta.ustgm.net";
+//var urlBase = "http://localhost";
 
 $(document).ready(function () {
     _region = localStorage.getItem("MRDKey");
@@ -99,11 +99,7 @@ function getReportByDate(fechainicial, fechaFinal, region) {
             $("#reportes").html("<h3>Reportes encontrados</h3><br>");
             response.forEach((element, index) => {
                 $("#reportes").append(
-                    '<button type="button" class="btn btn - link" onClick="fillResumen(' +
-                        index +
-                        ')">' +
-                        element["Folio"] +
-                        "</button>"
+                    '<button type="button" class="btn btn - link" onClick="fillResumen(' + index + ')">' + element["Folio"] + "</button>"
                 );
             });
             indice = 0;
@@ -131,11 +127,7 @@ function getReportByFolio(folio, region) {
             $("#reportes").html("<h3>Reportes encontrados</h3><br>");
             response.forEach((element, index) => {
                 $("#reportes").append(
-                    '<button type="button" class="btn btn - link" onClick="fillResumen(' +
-                        index +
-                        ')">' +
-                        element["Folio"] +
-                        "</button>"
+                    '<button type="button" class="btn btn - link" onClick="fillResumen(' + index + ')">' + element["Folio"] + "</button>"
                 );
                 console.log(element["Fecha"]);
             });
@@ -158,6 +150,9 @@ function fillResumen(indice) {
 
     moment.locale("es-us");
     //Seleccionamos los ids del resumen
+    //Reporte
+    $("#reporte").html("<h4>" + data[indice]["Folio"] + "</h4>");
+    //Modelo
     $("#modelo").html("<h4>" + data[indice]["Modelo"] + "</h4>");
     //Placas
     $("#placas").html("<h4>" + data[indice]["Placas"] + "</h4>");
@@ -172,21 +167,13 @@ function fillResumen(indice) {
     $("#grua").html("<h4>" + data[indice]["Grua"] + "</h4>");
 
     //Imagen1
-    $("#img1").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img1"] + '" alt = "lateral1" width = "100%">'
-    );
+    $("#img1").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img1"] + '" alt = "lateral1" width = "100%">');
 
-    $("#img2").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img2"] + '" alt = "lateral1" width = "100%">'
-    );
+    $("#img2").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img2"] + '" alt = "lateral1" width = "100%">');
 
-    $("#img3").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img3"] + '" alt = "lateral1" width = "100%">'
-    );
+    $("#img3").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img3"] + '" alt = "lateral1" width = "100%">');
 
-    $("#img4").html(
-        '<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img4"] + '" alt = "lateral1" width = "100%">'
-    );
+    $("#img4").html('<img src="' + urlBase + "/mrd/src/rutas/uploads/" + data[indice]["img4"] + '" alt = "lateral1" width = "100%">');
 
     //Generar link para el boton ver mas
     $("#verMas").html('<button type="button" class="btn btn-link">Pulse aqu&iacute;</button>');
@@ -201,7 +188,7 @@ function fillResumen(indice) {
     let fechaArrastreFornateada = formatFecha(data[indice]["Fecha"]);
 
     if (reporteActual.Ticket[0].Consecutivo == null) {
-        reporteActual.Ticket[0].Consecutivo = "XX";
+        reporteActual.Ticket[0].Consecutivo = "--";
     }
 
     $("#ticketFecha").html(
@@ -209,7 +196,7 @@ function fillResumen(indice) {
             ticketFecha +
             "<br>Fecha De Arrastre: <br>" +
             fechaArrastreFornateada +
-            "<br>REF: " +
+            "<br>REPORTE: " +
             data[indice]["Folio"] +
             "<br>FOLIO: " +
             reporteActual.Ticket[0].PrefijoConsecutivo +
@@ -237,6 +224,24 @@ function fillResumen(indice) {
     if (reporteActual.Ticket[0].Estado == true) {
         //Reporte cerrado, deshabilitamos la edicion del ticket
         disableTicket();
+        //Reporte cerrado, copiamos los datos del ticket a ticketData y los guardamos en
+        //Local Storage
+        ticketData.FechaTicket = ff;
+        ticketData.FechaArrastre = data[indice]["Fecha"];
+        ticketData.Folio = data[indice]["Folio"];
+        ticketData.Placas = data[indice]["Placas"];
+        ticketData.Marca = data[indice]["VahiculoMarca"];
+        ticketData.Tipo = data[indice]["Tipo"];
+        ticketData.Color = data[indice]["Color"];
+
+        ticketData.IFE = reporteActual.Ticket[0].IFE;
+        ticketData.Nombre = reporteActual.Ticket[0].Nombre;
+        ticketData.Importe = reporteActual.Ticket[0].Importe;
+        ticketData.ImporteLetra = reporteActual.Ticket[0].ImporteLetra;
+        ticketData.Concepto = reporteActual.Ticket[0].Concepto;
+        ticketData.Estado = reporteActual.Ticket[0].Estado;
+        ticketData.Consecutivo = reporteActual.Ticket[0].Consecutivo;
+        ticketData.PrefijoConsecutivo = reporteActual.Ticket[0].PrefijoConsecutivo;
         //console.log(reporteActual);
         //Llena la informacion del ticket
         $("#ticketIFE").val(reporteActual.Ticket[0].IFE);
@@ -245,12 +250,15 @@ function fillResumen(indice) {
         $("#ticketImporteLetra").val(reporteActual.Ticket[0].ImporteLetra);
         $("#ticketConcepto").val(reporteActual.Ticket[0].Concepto);
         //Generamos el boton generar ticket
-        $("#generarTicket").html('<div class="alert alert-danger" role="alert">Ticket Cerrado!</div>');
+        $("#generarTicket").html('<button onClick="mostrarTicket()" type="button" class="btn btn-warning">Mostrar Ticket</button>');
+        //$("#generarTicket").html('<div class="alert alert-danger" role="alert">Ticket Cerrado!</div>');
+        //Cmaniamos el ticketHeader para indicar si el ticket esta abierto o cerrado
+        $("#ticketHeader").html('<div class="alert alert-danger" role="alert">Ticket Cerrado!</div>');
+        localStorage.setItem("ticketData", JSON.stringify(ticketData));
     } else {
         //Generamos el boton generar ticket
-        $("#generarTicket").html(
-            '<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>'
-        );
+        $("#generarTicket").html('<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>');
+        $("#ticketHeader").html('<div class="alert alert-success" role="alert">Ticket Abierto</div>');
         limpiarTicket();
         enableTicket();
     }
@@ -329,7 +337,7 @@ function mostrarTicket() {
     window.open(
         "vistas/ticket.php",
         "Impresion de Ticket",
-        "toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=200,height=800,left = 390,top = 50"
+        "toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=290,height=800,left = 390,top = 50"
     );
 }
 
@@ -384,9 +392,7 @@ function formatDate(date) {
 //? ############################################################
 function generarTicket() {
     //Genetrar ticket
-    $("#generarTicket").html(
-        '<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>'
-    );
+    $("#generarTicket").html('<button onClick="ventanaTicket()" type="button" class="btn btn-outline-success">Generar Ticket</button>');
 }
 
 //? ############################################################
@@ -398,9 +404,7 @@ function cerrarTicket() {
     confirmationBody.removeClass("alert-warning");
     confirmationBody.addClass("alert-primary");
     confirmationBody.html("<p>Cerrando ticket, espere...</p>");
-    confirmationBody.append(
-        '<div class="spinner-border text-primary" role="status"><span class= "sr-only">Loading...</span ></div>'
-    );
+    confirmationBody.append('<div class="spinner-border text-primary" role="status"><span class= "sr-only">Loading...</span ></div>');
 
     $("#okModalConfirmacion").prop("disabled", true);
     $("#cancelModalConfirmacion").prop("disabled", true);
